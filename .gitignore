@@ -1,0 +1,12 @@
+# YOLO training artifacts
+runs/
+*.pt
+!weights/best.pt
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# OS files
+.DS_Store
