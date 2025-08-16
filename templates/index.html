@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Poker Odds</title>
+  <style>
+    video { border: 2px solid black; width: 480px; }
+    #result { font-size: 20px; margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Live Poker Hand Detection</h1>
+  <video id="video" autoplay playsinline></video>
+  <div id="result">Waiting for detection...</div>
+
+  <script>
+    const video = document.getElementById('video');
+    const resultDiv = document.getElementById('result');
+
+    // Start webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => { video.srcObject = stream; })
+      .catch(err => { console.error("Webcam error:", err); });
+
+    // Send frames to server every 1 second
+    setInterval(() => {
+      captureAndSend();
+    }, 1000);
+
+    function captureAndSend() {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0);
+
+      canvas.toBlob(blob => {
+        const formData = new FormData();
+        formData.append('frame', blob, 'frame.jpg');
+
+        fetch('/detect', { method: 'POST', body: formData })
+          .then(res => res.json())
+          .then(data => { resultDiv.innerText = data.result; })
+          .catch(err => console.error("Detection error:", err));
+      }, 'image/jpeg');
+    }
+  </script>
+</body>
+</html>
