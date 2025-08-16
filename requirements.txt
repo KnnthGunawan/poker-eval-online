@@ -1,7 +1,7 @@
+-r constraints.txt
 Flask
-Cython
 gunicorn
 ultralytics
-opencv-python-headless
+opencv-python-headless==4.8.1.78
 numpy
 eval7
