@@ -1,4 +1,5 @@
 Flask
+Cython
 gunicorn
 ultralytics
 opencv-python-headless
